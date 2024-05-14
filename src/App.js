@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef, useEffect} from "react";
+import { ThemeProvider } from "styled-components";
+import { defaultTheme, themesOptions } from "./style/theme";
+import { GlobalStyles } from "./style/global";
+import TypeBox from "./components/features/TypeBox";
+import Select from "./components/utils/Select";
 
 function App() {
+  const [theme, setTheme] = useState(defaultTheme);
+  const textInputRef = useRef(null);
+
+  const focusTextInput = () => {
+    textInputRef.current && textInputRef.current.focus()
+  }
+  useEffect(() => {focusTextInput()}, [theme]);
+  const handleThemeChange = (e) => {
+    setTheme(e.value);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <>
+        <GlobalStyles />
+        <header>
+        <h1>Miran's Typing Test</h1>
+          <a href={() => false}>an elegant typing experience</a>
+        </header>
+
+        <TypeBox textInputRef={textInputRef} key="type-box"></TypeBox>
+        <footer>
+          <Select
+            classNamePrefix="Select"
+            value={themesOptions.find((e) => e.value === theme)}
+            options={themesOptions}
+            isSearchable={false}
+            isSelected={false}
+            onChange={handleThemeChange}
+            menuPlacement="top"
+          />
+        </footer>
+      </>
+    </ThemeProvider>
   );
 }
 
